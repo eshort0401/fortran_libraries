@@ -139,4 +139,43 @@ module nc_tools
 
         end function add_var_nc_3d
 
+        function add_global_attr_nc( &
+            filename, attribute_name, attribute &
+        ) &
+            result(ncid)
+
+            ! Inputs
+            character(len = *) :: filename, attribute_name
+            real :: attribute
+
+            ! Function variables
+            integer(kind=4) :: status
+
+            ! Outputs
+            integer(kind=4) :: ncid
+
+            ! Open nc file
+            call check(nf90_open(filename, nf90_write, ncid))
+
+            ! Put in define module
+            call check(nf90_redef(ncid))
+
+            status = nf90_put_att(ncid, NF90_GLOBAL, attribute_name, attribute)
+
+            ! Close the file
+            call check(nf90_close(ncid))
+
+            print *, 'Successfully added attribute to netcdf file!'
+
+            contains
+                subroutine check(status)
+                    integer(kind=4), intent ( in) :: status
+                    if(status/=nf90_noerr) then
+                        print *, trim(nf90_strerror(status))
+                        stop 'Stopped'
+                    end if
+                end subroutine check
+
+        end function add_global_attr_nc
+
 end module nc_tools
