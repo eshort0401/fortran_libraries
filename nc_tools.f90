@@ -4,6 +4,18 @@ module nc_tools
     implicit none
     public
     contains
+        subroutine read_cl_real_arg(argI, var)
+
+            integer(kind=4) :: argI
+            real :: var
+            character(len=32) :: name
+
+            call get_command_argument(argI, name)
+            name = trim(adjustl(name))
+            read(name, *) var
+
+        end subroutine read_cl_real_arg
+
         function export_nc_3d( &
             filename, array, array_name, &
             x, y, z, &! Coord. variables.
